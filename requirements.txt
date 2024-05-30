@@ -1,0 +1,14 @@
+Flask
+flask-restx
+gunicorn
+rq
+flask-cors
+langchain_community
+langchain
+faiss-gpu
+pypdf
+python-dotenv
+redis
+boto3
+sentence-transformers
+einops
