@@ -30,10 +30,9 @@ def update_vector_store(documents: List[Document]):
         # if FAISS_DB_FILE exists:
         if os.path.exists(config.FAISS_DB_FILE):
             vector_store = FAISS.load_local(config.FAISS_DB_FILE, embeddings, allow_dangerous_deserialization=True)
-            print(type(vector_store))
-            print(type(new_documents))
             vector_store.add_documents(documents)
-            vector_store.save_local(config.FAISS_DB_FILE)
+            # vector_store.save_local(config.FAISS_DB_FILE)
+            save_vector_store(vector_store)
         else:
             new_documents.save_local(config.FAISS_DB_FILE)
     except Exception as e:
@@ -50,4 +49,13 @@ def load_vector_store() -> FAISS:
             return vector_store
     except Exception as e:
         print(f"Error loading vector store: {str(e)}")
+        raise e
+
+
+def save_vector_store(vector_store: FAISS):
+    try:
+        vector_store.save_local(config.FAISS_DB_FILE)
+        print("Vector store saved")
+    except Exception as e:
+        print(f"Error saving vector store: {str(e)}")
         raise e

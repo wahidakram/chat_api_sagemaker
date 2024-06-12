@@ -12,3 +12,4 @@ redis
 boto3
 sentence-transformers
 einops
+pandas

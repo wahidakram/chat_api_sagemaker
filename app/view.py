@@ -13,7 +13,7 @@ from app.rag.models import PDFFile
 from app.rag.parser import question_parser, multiple_files_upload_parser, task_id_parser
 from app.rag.vector_db import load_vector_store
 from app.rag.prompt import PROMPT
-from app.rag.tasks import process_pdf, queue
+from app.rag.tasks import process_pdf, queue, delete
 
 from config import config
 
@@ -97,3 +97,19 @@ class Status(Resource):
             return json.loads(status)
         else:
             return {"message": "Item ID Not Found"}
+
+
+delete_file_model = ns.model('File', {
+    'files_name': fields.List(fields.String, required=True),
+})
+
+
+@ns.route("/delete")
+class Delete(Resource):
+    @ns.expect(delete_file_model)
+    def delete(self, **kwargs):
+        args = ns.payload
+        files = args.get('files_name')
+        print(f"Deleting files {files}")
+        queue.enqueue(delete, files)
+        return jsonify({f"message": f"Deleting files {files}"})
