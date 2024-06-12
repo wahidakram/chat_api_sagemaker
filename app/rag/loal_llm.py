@@ -45,11 +45,11 @@ from app.rag.content_handler import content_handler
 roleARN = "arn:aws:iam::851725439453:role/SAGEMAKER-FULL"
 
 # Create a session object
-session = boto3.Session()
 
 
 # Function to assume the role and create a client
 def create_sagemaker_client():
+    session = boto3.Session()
     sts_client = session.client("sts")
     response = sts_client.assume_role(
         RoleArn=roleARN, RoleSessionName="wahid"
@@ -67,7 +67,7 @@ def create_sagemaker_client():
     return sagemaker_client
 
 
-client = create_sagemaker_client()
+# client = create_sagemaker_client()
 
 endpoint_name = "pixelpai-dev-meta-textgeneration-l-20240520-091809"
 
@@ -75,7 +75,7 @@ endpoint_name = "pixelpai-dev-meta-textgeneration-l-20240520-091809"
 def load_llm():
     llm = SagemakerEndpoint(
         endpoint_name=endpoint_name,
-        client=client,
+        client=create_sagemaker_client(),
         model_kwargs={
             "max_new_tokens": 256,
             "top_p": 0.9,
