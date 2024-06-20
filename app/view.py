@@ -32,7 +32,9 @@ api.add_namespace(ns)
 
 @ns.route("/chat")
 class Chat(Resource):
-    @api.expect(question_parser)
+    @ns.expect(question_parser)
+    @ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 500: 'Mapping Key Error'},
+            description="Chat with the model", )
     def post(self):
         arg = question_parser.parse_args()
         vector_store = load_vector_store()
@@ -61,6 +63,8 @@ class UploadFiles(Resource):
     """
 
     @ns.expect(multiple_files_upload_parser)
+    @ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 500: 'Mapping Key Error'},
+            description="Upload multiple files for embedding and processing")
     def post(self):
         pdf_list = []
         try:
@@ -89,6 +93,8 @@ class UploadFiles(Resource):
 @ns.route("/status")
 class Status(Resource):
     @ns.expect(task_id_parser)
+    @ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 500: 'Mapping Key Error'},
+            description="Get the status of the task")
     def get(self):
         args = task_id_parser.parse_args()
         task_id = args.get('task_id')
@@ -107,6 +113,8 @@ delete_file_model = ns.model('File', {
 @ns.route("/delete")
 class Delete(Resource):
     @ns.expect(delete_file_model)
+    @ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 500: 'Mapping Key Error'},
+            description="Delete files from the embedding")
     def delete(self, **kwargs):
         args = ns.payload
         files = args.get('files_name')
